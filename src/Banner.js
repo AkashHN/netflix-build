@@ -1,0 +1,58 @@
+import axios from "./axios";
+import React, { useEffect, useState } from "react";
+import requests from "./Request";
+import "./Banner.css";
+
+function Banner() {
+  const [movie, setMovie] = useState([]);
+
+  useEffect(() => {
+    async function fetchData() {
+      const request = await axios.get(requests.fetchNetflixOriginals);
+      setMovie(
+        request.data.results[
+          Math.floor(Math.random() * request.data.results.length - 1)
+        ]
+      );
+
+      return request;
+    }
+    fetchData();
+  }, []);
+
+  function truncate(string, n) {
+    return string?.length > n ? string.substr(0, n - 1) + "..." : string;
+  }
+
+  return (
+    <header
+      className="banner"
+      style={{
+        backgroundSize: "Cover",
+        backgroundImage: `url("https://image.tmdb.org/t/p/original/${movie?.backdrop_path}")`,
+        backgroundPosition: "fixed center",
+      }}
+    >
+      <div className="banner__contents">
+        <h1 className="banner__title">
+          {movie?.title || movie?.name || movie?.original_name}
+        </h1>
+        <div className="banner__buttons">
+          <button className="banner__button">play</button>
+          <button className="banner__button">My List</button>
+        </div>
+        <h1 className="banner_description">{truncate(movie?.overview, 150)}</h1>
+      </div>
+      <div className="banner--fadebottom" />
+    </header>
+  );
+}
+
+export default Banner;
+
+git init
+git add .
+git commit -m "first commit"
+git branch -M main
+git remote add origin https://github.com/AkashHN/netflix-build.git
+git push -u origin main
